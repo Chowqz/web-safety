@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
+
+
+    <title>主页</title>
+    <link rel="stylesheet" type="text/css" href="/style/reset.css">
+    <style type="text/css">
+    .wrapper {
+        width: 800px;
+        margin: 0 auto;
+    }
+
+    .user-name{
+        line-height: 50px;
+    }
+
+    .comment-form {
+        padding: 20px 0;
+    }
+
+    .content-input {
+        display: block;
+        width: 600px;
+        height: 100px;
+        border: 1px solid #b4ca65;
+    }
+
+    .submit-btn {
+        width: 150px;
+        height: 38px;
+        color: #fff;
+        background-color: #b4ca65;
+        margin-top: 20px;
+    }
+
+    .comment-item {
+        margin-bottom: 20px;
+    }
+
+    .comment-item-head {
+        display: flex;
+        background-color: #b4ca65;
+        line-height: 32px;
+        font-size: 16px;
+        padding-left: 10px;
+    }
+
+    .comment-item-head .author,
+    .comment-item-head .time {
+        display: block;
+        width: 200px;
+    }
+
+    .comment-item-content {
+        font-size: 14px;
+        background-color: #e6f5af;
+        padding: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h3 class="user-name"><%-userName %></h3>
+        <img src="<%-userName %>">
+        <a href="javascript:alert(1)">xss</a>
+        <div class="comment-form">
+            <textarea class="content-input" placeholder="请写入内容"></textarea>
+            <button class="submit-btn">提交</button>
+        </div>
+        <ul class="comment-list">
+            <% for(let i = 0;i < commentList.length; i++) { %>
+            <li class="comment-item">
+                <div class="comment-item-head">
+                    <span class="author">
+                        <%=commentList[i]['authorName'] %></span>
+                    <span class="time">
+                        <%=commentList[i]['createTime'] %></span>
+                </div>
+                <div class="comment-item-content">
+                    <%- commentList[i]['content'] %>
+                    <!-- <%-commentList[i]['content'] %> -->
+                </div>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+    <script type="text/javascript" src="/js/libs/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('.submit-btn').click(function() {
+            var content = $('.content-input').val();
+            $.ajax({
+                url: '/api/comment/addComment',
+                method: 'post',
+                data: {
+                    content: content
+                },
+                success: function(res) {
+                    if (res.code === '0') {
+                        window.location.reload();
+                    } else {
+                        alert(res.msg);
+                    }
+                },
+                error: function(err) {
+                    alert(err);
+                }
+            })
+        })
+    })
+
+    var a = <%- userName %>
+    </script>
+    <!-- <%-userName %> -->
+</body>
+
+</html>
