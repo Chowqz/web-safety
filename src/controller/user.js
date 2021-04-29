@@ -43,7 +43,8 @@ async function login(ctx, { userName, password }) {
 
         ctx.cookies.set('token', token, {
             maxAge: 3600 * 1000 * 24,
-            httpOnly: false
+            httpOnly: false,
+            sameSite: 'Lax'
         })
 
         return {

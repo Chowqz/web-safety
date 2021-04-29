@@ -31,7 +31,7 @@
     }
 
     .submit-btn {
-        width: 150px;
+        width: 260px;
         height: 38px;
         color: #fff;
         background-color: #b4ca65;
@@ -66,7 +66,7 @@
 
 <body>
     <div class="wrapper">
-        <h3 class="user-name"><%-userName %></h3>
+        <!-- <h3 class="user-name"><%- userName %></h3> -->
         <img src="<%-userName %>">
         <a href="javascript:alert(1)">xss</a>
         <div class="comment-form">
@@ -83,14 +83,15 @@
                         <%=commentList[i]['createTime'] %></span>
                 </div>
                 <div class="comment-item-content">
-                    <%- commentList[i]['content'] %>
-                    <!-- <%-commentList[i]['content'] %> -->
+                    <!-- <%= commentList[i]['content'] %> -->
+                    <%-commentList[i]['content'] %>
                 </div>
             </li>
             <% } %>
         </ul>
     </div>
     <script type="text/javascript" src="/js/libs/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script type="text/javascript">
     $(document).ready(function() {
         $('.submit-btn').click(function() {
@@ -103,7 +104,7 @@
                 },
                 success: function(res) {
                     if (res.code === '0') {
-                        window.location.reload();
+                        // window.location.reload();
                     } else {
                         alert(res.msg);
                     }
@@ -115,9 +116,23 @@
         })
     })
 
-    var a = <%- userName %>
+    // 1" onerror="alert('通过HTML属性的xss攻击')
+
+    // alert('通过js的xss攻击')
+    // var a = <%- userName %>
     </script>
+    <!-- <script>alert('通过js的xss攻击')</script> -->
     <!-- <%-userName %> -->
+
+
+    <script type="text/javascript">
+        // console.log(top);
+        // console.log(window)
+        // if(top.location !== window.location) {
+        //     alert('页面被iframe内嵌了');
+        //     top.location = window.location;
+        // }
+    </script>
 </body>
 
 </html>

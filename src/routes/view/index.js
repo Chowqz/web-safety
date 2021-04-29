@@ -19,4 +19,9 @@ router.get('/index', loginCheck, async (ctx, next) => {
 });
 
 
+router.post('/cspReport',  async (ctx, next) => {
+    
+    ctx.body = ctx.request.body;
+});
+
 module.exports = router;

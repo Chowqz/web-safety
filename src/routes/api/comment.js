@@ -10,6 +10,14 @@ router.post('/addComment', loginCheck, async (ctx, next) => {
     ctx.body = await addComment({ content, authorId: userInfo.userId });
 });
 
+router.get('/newComment', loginCheck, async (ctx, next) => {
+    console.log(ctx.request.query);
+    console.log(ctx.query);
+    const { content } = ctx.query;
+    const userInfo = ctx.request.userInfo;
+    ctx.body = await addComment({ content, authorId: userInfo.userId });
+});
+
 
 router.post('/getCommentList', loginCheck, async (ctx, next) => {
     const { pageIndex, pageSize } = ctx.request.body;
