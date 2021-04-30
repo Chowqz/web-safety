@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
-
-
     <title>主页</title>
     <link rel="stylesheet" type="text/css" href="/style/reset.css">
     <style type="text/css">
@@ -15,7 +13,7 @@
         margin: 0 auto;
     }
 
-    .user-name{
+    .user-name {
         line-height: 50px;
     }
 
@@ -29,7 +27,12 @@
         height: 100px;
         border: 1px solid #b4ca65;
     }
-
+    .captcha-input, .csrf-token{
+        display: block;
+        width: 200px;
+        height: 40px;
+        border: 1px solid #ddd;
+    }
     .submit-btn {
         width: 260px;
         height: 38px;
@@ -61,16 +64,22 @@
         background-color: #e6f5af;
         padding: 20px;
     }
+    a{
+        color: red;
+    }
     </style>
 </head>
 
 <body>
     <div class="wrapper">
         <!-- <h3 class="user-name"><%- userName %></h3> -->
-        <img src="<%-userName %>">
-        <a href="javascript:alert(1)">xss</a>
+        <!-- <img src="<%-userName %>"> -->
+        <!-- <a href="javascript:alert(1)">xss</a> -->
         <div class="comment-form">
             <textarea class="content-input" placeholder="请写入内容"></textarea>
+            <!-- <input class="csrf-token" type="text" name="csrfToken" value="<%- csrfToken %>"> -->
+            <!-- <%- captcha %> -->
+            <!-- <input class="captcha-input" type="text" name="captcha" placeholder="请输入验证码"> -->
             <button class="submit-btn">提交</button>
         </div>
         <ul class="comment-list">
@@ -83,8 +92,8 @@
                         <%=commentList[i]['createTime'] %></span>
                 </div>
                 <div class="comment-item-content">
-                    <!-- <%= commentList[i]['content'] %> -->
-                    <%-commentList[i]['content'] %>
+                    <%= commentList[i]['content'] %>
+                    <!-- <%-commentList[i]['content'] %> -->
                 </div>
             </li>
             <% } %>
@@ -93,14 +102,25 @@
     <script type="text/javascript" src="/js/libs/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <script type="text/javascript">
+    function getCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg))
+            return arr[2];
+        else
+            return null;
+    }
     $(document).ready(function() {
         $('.submit-btn').click(function() {
             var content = $('.content-input').val();
+            var csrfToken = $('.csrf-token').val();
+            var captcha = $('.captcha-input').val();
             $.ajax({
                 url: '/api/comment/addComment',
                 method: 'post',
                 data: {
-                    content: content
+                    content: content || '默认输入',
+                    csrfToken: csrfToken,
+                    captcha: captcha
                 },
                 success: function(res) {
                     if (res.code === '0') {
@@ -119,19 +139,18 @@
     // 1" onerror="alert('通过HTML属性的xss攻击')
 
     // alert('通过js的xss攻击')
-    // var a = <%- userName %>
+    var a = <%- userName %>
     </script>
     <!-- <script>alert('通过js的xss攻击')</script> -->
     <!-- <%-userName %> -->
 
-
     <script type="text/javascript">
-        // console.log(top);
-        // console.log(window)
-        // if(top.location !== window.location) {
-        //     alert('页面被iframe内嵌了');
-        //     top.location = window.location;
-        // }
+    // console.log(top);
+    // console.log(window)
+    // if(top.location !== window.location) {
+    //     alert('页面被iframe内嵌了');
+    //     top.location = window.location;
+    // }
     </script>
 </body>
 
